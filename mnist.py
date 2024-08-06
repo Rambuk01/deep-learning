@@ -19,6 +19,7 @@ def test(dataloader, model, criterion):
     test_loss /= num_batches
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    return correct, test_loss
 
 
 def train(dataloader, model, criterion, optimizer):
@@ -35,10 +36,11 @@ def train(dataloader, model, criterion, optimizer):
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
-
+        
         if batch % 100 == 0:
             loss, current = loss.item(), (batch + 1) * len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+
 
 
 
@@ -67,32 +69,50 @@ device = (
 print(f"Using {device} device")
 
 
-class MyNetwork(nn.Module):
+# Define model
+class NeuralNetwork(nn.Module):
     def __init__(self):
-        super(MyNetwork, self).__init__()
-        self.flatten = nn.Flatten();
-        self.fc1 = nn.Linear(in_features=28*28, out_features=512)
-        self.fc2 = nn.Linear(in_features=512, out_features=512)
-        self.fc3 = nn.Linear(in_features=512, out_features=10)
-        self.relu = nn.ReLU()
-        self.softmax = nn.Softmax(dim=1)
+        super().__init__()
+        self.flatten = nn.Flatten()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(784, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10)
+        )
+
     def forward(self, x):
         x = self.flatten(x)
-        x = self.relu(self.fc1(x))
-        x = self.relu(self.fc2(x))
-        x = self.softmax(self.fc3(x))
-        return x
-model = MyNetwork().to(device)
+        logits = self.linear_relu_stack(x)
+        return logits
+
+model = NeuralNetwork().to(device)
 print(model)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
 
-epochs = 4
+epochs = 10
+loss_values = []
+acc_values = []
+epochs_list = []
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_loader, model, criterion, optimizer)
-    test(test_loader, model, criterion)
+    
+    acc, loss = test(test_loader, model, criterion)
+    loss_values.append(loss)
+    acc_values.append(acc)
+    epochs_list.append(t)
+
+plt.plot(epochs_list, loss_values, 'b', label='test loss')
+plt.plot(epochs_list, acc_values, 'r', label='acc')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
 print("Done!")
 
 """
