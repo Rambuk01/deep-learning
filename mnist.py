@@ -71,9 +71,9 @@ class MyNetwork(nn.Module):
     def __init__(self):
         super(MyNetwork, self).__init__()
         self.flatten = nn.Flatten();
-        self.fc1 = nn.Linear(in_features=28*28, out_features=20)
-        self.fc2 = nn.Linear(in_features=20, out_features=20)
-        self.fc3 = nn.Linear(in_features=20, out_features=10)
+        self.fc1 = nn.Linear(in_features=28*28, out_features=512)
+        self.fc2 = nn.Linear(in_features=512, out_features=512)
+        self.fc3 = nn.Linear(in_features=512, out_features=10)
         self.relu = nn.ReLU()
         self.softmax = nn.Softmax(dim=1)
     def forward(self, x):
@@ -94,7 +94,6 @@ for t in range(epochs):
     train(train_loader, model, criterion, optimizer)
     test(test_loader, model, criterion)
 print("Done!")
-
 
 """
 PATH = 'model.pth'
