@@ -70,30 +70,31 @@ print(f"Using {device} device")
 
 
 # Define model
-class NeuralNetwork(nn.Module):
+class MyNetwork(nn.Module):
     def __init__(self):
-        super().__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(784, 512),
-            nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 10)
-        )
+        super(MyNetwork, self).__init__()
+        self.flatten = nn.Flatten();
+        self.fc1 = nn.Linear(in_features=28*28, out_features=500)
+        self.fc2 = nn.Linear(in_features=500, out_features=250)
+        self.fc3 = nn.Linear(in_features=250, out_features=125)
+        self.fc4 = nn.Linear(in_features=125, out_features=10)
 
+        self.relu = nn.ReLU()
+        
     def forward(self, x):
         x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
-
-model = NeuralNetwork().to(device)
+        x = self.relu(self.fc1(x))
+        x = self.relu(self.fc2(x))
+        x = self.relu(self.fc3(x))
+        x = self.relu(self.fc4(x))
+        return x
+model = MyNetwork().to(device)
 print(model)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-epochs = 10
+epochs = 50
 loss_values = []
 acc_values = []
 epochs_list = []
