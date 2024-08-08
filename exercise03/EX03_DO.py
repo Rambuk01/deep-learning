@@ -34,7 +34,7 @@ class NeuralNet(nn.Module):
 model = NeuralNet()
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=0.1) #momentum=0.9
+optimizer = optim.SGD(model.parameters(), lr=0.5, momentum=0.9) #momentum=0.9
 
 
 
@@ -55,8 +55,8 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()  # Zero the parameter gradients
         outputs = model(inputs)  # Forward pass: compute the model output
         loss = criterion(outputs, targets)  # Compute the loss
-        l1_norm_fc2 = torch.norm(model.fc2.weight, p=2)  # Calculate L1 norm of the weights in the 2nd layer
-        loss += 0.001 * l1_norm_fc2  # Add L1 regularization to the loss
+        #l1_norm_fc2 = torch.norm(model.fc2.weight, p=2)  # Calculate L1 norm of the weights in the 2nd layer
+        #loss += 0.001 * l1_norm_fc2  # Add L1 regularization to the loss
 
         loss.backward()  # Backward pass: compute gradients
         optimizer.step()  # Optimize the weights based on gradients
