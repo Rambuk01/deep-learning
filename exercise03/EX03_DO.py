@@ -18,15 +18,21 @@ batch_size=256, shuffle=False)
 class NeuralNet(nn.Module):
     def __init__(self):
         super(NeuralNet, self).__init__()
+        self.dropout = nn.Dropout(0.3)  # 2.a add dropout layer
+
         self.fc1 = nn.Linear(28*28, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 10)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 64)
+        self.fc4 = nn.Linear(64, 10)
     
     def forward(self, x):
         x = torch.flatten(x, 1)
         x = torch.relu(self.fc1(x))
+        x = self.dropout(x) # add dropout layer
         x = torch.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = self.dropout(x) # add dropout layer
+        x = torch.relu(self.fc3(x))
+        x = self.fc4(x)
         return x
 
 # Regularization parameters
@@ -34,7 +40,7 @@ class NeuralNet(nn.Module):
 model = NeuralNet()
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.1) #momentum=0.9
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9) #momentum=0.9
 
 
 
@@ -55,8 +61,8 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()  # Zero the parameter gradients
         outputs = model(inputs)  # Forward pass: compute the model output
         loss = criterion(outputs, targets)  # Compute the loss
-        #l1_norm_fc2 = torch.norm(model.fc2.weight, p=2)  # Calculate L1 norm of the weights in the 2nd layer
-        #loss += 0.001 * l1_norm_fc2  # Add L1 regularization to the loss
+        l1_norm_fc2 = torch.norm(model.fc2.weight, p=2)  # Calculate L2 norm of the weights in the 2nd layer
+        loss += 0.001 * l1_norm_fc2  # Add L1 regularization to the loss
 
         loss.backward()  # Backward pass: compute gradients
         optimizer.step()  # Optimize the weights based on gradients
