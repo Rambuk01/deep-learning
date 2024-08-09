@@ -34,12 +34,12 @@ class NeuralNet(nn.Module):
 model = NeuralNet()
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=0.5, momentum=0.9) #momentum=0.9
+optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.1) #momentum=0.9
 
 
 
 # Training settings
-num_epochs = 50
+num_epochs = 100
 
 train_losses = []
 val_losses = []
@@ -106,5 +106,5 @@ lines = [train_loss_line, val_loss_line, accuracy_line]
 labels = [line.get_label() for line in lines]
 plt.title('Training Loss, Validation Loss, and Accuracy')
 plt.legend(lines, labels, loc='upper left')
-plt.savefig(f'exercise03/asd.png')
+plt.savefig(f'exercise03/asd2.png')
 # plt.show()
