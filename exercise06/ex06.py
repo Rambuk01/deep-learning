@@ -14,17 +14,54 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=64, s
 class MyNetwork(nn.Module):
     def __init__(self):
         super(MyNetwork, self).__init__()
+
+        # 1 Input layer
         self.fc1 = nn.Linear(in_features=28*28, out_features=128)
-        self.fc2 = nn.Linear(in_features=128, out_features=64)
+
+        # PATH 1 - FORK CONV
+        self.conv_1_1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, padding=0)
+        self.conv_1_2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=0)
+        self.pool_1 = nn.MaxPool2d(kernel_size=2)
+        
+        # PATH 2 - FORK CONV
+        self.conv_2_1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, padding=0)
+        self.conv_2_2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=0)
+        self.pool_2 = nn.MaxPool2d(kernel_size=2)
+
+        # Last 2 layers after concat.
+        self.fc2 = nn.Linear(in_features=12 * 12 * 128, out_features=64)
         self.fc3 = nn.Linear(in_features=64, out_features=10)
 
         self.relu = nn.ReLU()
+        self.softmax = nn.Softmax()
         
     def forward(self, x):
         x = torch.flatten(x, 1)
+
+        # Initial fully connected layer
         x = self.relu(self.fc1(x))
-        x = self.relu(self.fc2(x))
-        x = self.relu(self.fc3(x))
+
+        # Reshape to image format for convolutional layers
+        x = x.view(-1, 1, 28, 28)
+
+        # PATH 1
+        x1 = self.relu(self.conv_1_1(x))
+        x1 = self.relu(self.conv_1_2(x1))
+        x1 = self.pool_1(x1)
+        
+        # PATH 2
+        x2 = self.relu(self.conv_2_1(x))
+        x2 = self.relu(self.conv_2_2(x2))
+        x2 = self.pool_2(x2)
+
+        # CONCAT
+        x_cat = torch.cat((x1, x2), dim=1)
+
+        x_cat = x_cat.view(-1, 12*12*128)
+        
+        x = self.relu(self.fc2(x_cat))
+        x = self.softmax(self.fc3(x))
+
         return x
     
 model = MyNetwork()
