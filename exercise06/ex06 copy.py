@@ -16,13 +16,44 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=256, 
 class MyNetwork(nn.Module):
     def __init__(self):
         super(MyNetwork, self).__init__()
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.dropout1 = nn.Dropout(0.25)
+        self.dropout2 = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
+        
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        
+
+        x = F.relu(x)
+        x = F.max_pool2d(x, 2)
+        
+        x = self.dropout1(x)
+
+        x = torch.flatten(x, 1)
+
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.dropout2(x)
+        x = self.fc2(x)
+        output = F.log_softmax(x, dim=1)
+        return output
+
+class MyNetwork(nn.Module):
+    def __init__(self):
+        super(MyNetwork, self).__init__()
         # Initial fully connected layer
         self.fc1 = nn.Linear(28 * 28, 28 * 28)  # Input layer
         
         # Forking paths with convolutional layers
         # Path 1
-        self.conv1_1 = nn.Conv2d(1, 16, kernel_size=3, padding=1)  # 1 input channel, 16 output channels
-        self.conv1_2 = nn.Conv2d(16, 32, kernel_size=3, padding=1) # 16 input channels, 32 output channels
+        self.conv1_1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)  # 1 input channel, 16 output channels
+        self.conv1_2 = nn.Conv2d(32, 32, kernel_size=3, padding=1) # 16 input channels, 32 output channels
         
         # Path 2
         self.conv2_1 = nn.Conv2d(1, 16, kernel_size=5, padding=2)  # 1 input channel, 16 output channels
@@ -34,16 +65,9 @@ class MyNetwork(nn.Module):
         
         self.relu = nn.ReLU()
         self.softmax = nn.Softmax(dim=1)  # Apply softmax along the class dimension (dim=1)
+        self.iteration = 1;
         
     def forward(self, x):
-        # Flatten the input
-        x = torch.flatten(x, 1)
-        
-        # Initial fully connected layer
-        x = F.relu(self.fc1(x))
-
-        # Reshape to image format for convolutional layers
-        x = x.view(256, 1, 28, 28)
         
         # Forked path 1
         x1 = F.relu(self.conv1_1(x))
@@ -54,7 +78,9 @@ class MyNetwork(nn.Module):
         x2 = F.max_pool2d(F.relu(self.conv2_2(x2)), 2)  # Max pooling
 
         # Print shapes to debug
-        #print(f"x1 shape: {x1.shape}, x2 shape: {x2.shape}")
+        if (self.iteration == 1):
+            print(f"x1 shape: {x1.shape}, x2 shape: {x2.shape}")
+            self.iteration += 1
         
         # Concatenate the outputs from both paths
         x_cat = torch.cat((x1, x2), dim=1)  # Concatenate along the channel dimension
@@ -72,14 +98,12 @@ class MyNetwork(nn.Module):
         
         return x
 
-
-
 model = MyNetwork()
 print(model)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=0.01) #momentum=0.9
+optimizer = optim.SGD(model.parameters(), lr=0.1) #momentum=0.9
 
 
 
