@@ -3,6 +3,6 @@ data/
 __pycache__/
 test_files/
 venv/
-
+.DS_Store
 test/
 train/
