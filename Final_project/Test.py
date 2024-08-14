@@ -1,26 +1,47 @@
-import os
-from shutil import move
-import random
+""" 
+Group 8 Memebers:
+- Alberte Krogh Hansen
+- Aiga Kalneja
+- Anton Rindom
+- Geo Vittrop Søndergaard
+- Maria Post Hofmann
+- Mario Hernández Festersen
+"""
 
-# Define paths
-source_dir = r'C:\Users\Aiga\Desktop\SDU\Final project\data'  # Directory containing all the images
-base_dir = r'C:\Users\Aiga\Desktop\SDU\Final project\organized_data'  # Base directory where organized images will be stored
+#                                   Task 1: 
 
-# Create subdirectories for train, val, and test splits
+# Imports
+import os # Handling directory
+from shutil import move # File operations
+import random # Randomizing the data split
+
+
+# mario har sat børnesikring 
+# Directory defining
+source_dir = r'/ADATA500/Programmering/Visual studio code/DS833 - DL/Uden navn/Final_project/data' 
+# Create the base directory relative to the source directory
+base_dir = os.path.join(os.path.dirname(source_dir), 'organized_data')
+
+# Print the directories for verification
+print(f"Source directory: {source_dir}")
+print(f"Base directory: {base_dir}")
+
+# Datastructure (Figure 1)
 for split in ['training', 'validation', 'testing']:
     for category in ['normal', 'pneumonia']:
         os.makedirs(os.path.join(base_dir, split, category), exist_ok=True)
 
-# Get list of all images
-images = os.listdir(source_dir)
 
-# Shuffle the images for a random split
+# Creating and randonmizing an image list
+images = os.listdir(source_dir)
 random.shuffle(images)
 
-# Calculate split sizes (e.g., 80% train, 10% val, 10% test)
+
+# We chose to split into 80% training, 10% validation, 10% test, since 
+# we want a large training set to reduze overfitting.
 total_images = len(images)
-training_split = int(0.8 * total_images)
-validation_split = int(0.9 * total_images)
+training_split = int(0.8 * total_images) 
+validation_split = int(0.9 * total_images) #culmulative number combined leaving 10% for testing
 
 # Function to move files to corresponding subfolder
 def move_files(image_list, dest_dir):
