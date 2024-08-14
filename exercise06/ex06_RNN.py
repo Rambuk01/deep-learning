@@ -7,10 +7,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import sys
-import torchtext
+
 print(torch.__version__)
-print(torchtext.__version__)
-sys.exit()
+
 transform = transforms.ToTensor()
 """
 train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
