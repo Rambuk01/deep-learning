@@ -157,6 +157,9 @@ for epoch in range(num_epochs):
     
     print(f'Epoch [{epoch+1}/{num_epochs}], Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}, Accuracy: {test_accuracy:.2f}%')
 
+torch.save(model.state_dict(), 'exercise06/')
+
+
 # Plot training and validation loss, along with accuracy
 plt.figure(figsize=(12, 6))
 
@@ -173,5 +176,5 @@ lines = [train_loss_line, val_loss_line, accuracy_line]
 labels = [line.get_label() for line in lines]
 plt.title('Training Loss, Validation Loss, and Accuracy')
 plt.legend(lines, labels, loc='upper left')
-plt.savefig(f'exercise04/DEEP-{neurons}.png')
-# plt.show()
+
+plt.show()
