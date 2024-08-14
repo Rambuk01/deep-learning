@@ -54,13 +54,13 @@ class MyNetwork(nn.Module):
         x2 = F.max_pool2d(F.relu(self.conv2_2(x2)), 2)  # Max pooling
 
         # Print shapes to debug
-        #print(f"x1 shape: {x1.shape}, x2 shape: {x2.shape}")
+        print(f"x1 shape: {x1.shape}, x2 shape: {x2.shape}")
         
         # Concatenate the outputs from both paths
         x_cat = torch.cat((x1, x2), dim=1)  # Concatenate along the channel dimension
         x_cat = F.max_pool2d(x_cat, 2)
         # Flatten the concatenated output for the fully connected layers
-        #print(f"x_cat shape before flattening: {x_cat.shape}")
+        print(f"x_cat shape before flattening: {x_cat.shape}")
         x_cat = x_cat.view(x_cat.size(0), -1)  # Use dynamic batch size
         
         # Check the size after flattening
@@ -149,5 +149,5 @@ lines = [train_loss_line, val_loss_line, accuracy_line]
 labels = [line.get_label() for line in lines]
 plt.title('Training Loss, Validation Loss, and Accuracy')
 plt.legend(lines, labels, loc='upper left')
-plt.savefig(f'exercise04/DEEP-{neurons}.png')
+plt.savefig(f'exercise04/DEEP.png')
 # plt.show()
