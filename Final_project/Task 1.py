@@ -18,7 +18,7 @@ import random # Randomizing the data split
 
 #                           * mario har sat børnesikring *
 # Directory defining
-source_dir = r'/ADATA500/Programmering/Visual studio code/DS833 - DL/Uden navn/Final_project/data' 
+source_dir = os.getcwd() + '/Final_project/data' 
 # Create the base directory relative to the source directory
 base_dir = os.path.join(os.path.dirname(source_dir), 'organized_data')
 
