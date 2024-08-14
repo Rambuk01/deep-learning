@@ -3,7 +3,7 @@ from shutil import move
 import random
 import sys
 # Define paths
-source_dir = r'C:\Users\Aiga\Desktop\SDU\Final project\data'  # Directory containing all the images
+source_dir = !ls  # Directory containing all the images
 base_dir = r'C:\Users\Aiga\Desktop\SDU\Final project\organized_data'  # Base directory where organized images will be stored
 current_directory = os.path.dirname(os.path.abspath(__file__))
 print(current_directory)
