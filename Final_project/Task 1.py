@@ -15,8 +15,6 @@ import os # Handling directory
 from shutil import move # File operations
 import random # Randomizing the data split
 
-
-#                           * mario har sat børnesikring *
 # Directory defining
 source_dir = r'/ADATA500/Programmering/Visual studio code/DS833 - DL/Uden navn/Final_project/data' 
 # Create the base directory relative to the source directory
