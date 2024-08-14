@@ -5,3 +5,4 @@ test_files/
 venv/
 .DS_Store
 textvenv/
+data.zip
