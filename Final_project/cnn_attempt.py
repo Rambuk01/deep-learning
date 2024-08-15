@@ -96,12 +96,15 @@ class CNN(nn.Module):
         x = self.dropout(x)
         x = self.fc2(x)
         return x
+
 # Training and Evaluation
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def train(model, num_epochs=25):
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    #optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+
     model.to(device)
 
     for epoch in range(num_epochs):
@@ -131,12 +134,14 @@ def evaluate(model, loader):
     accuracy = 100 * correct / total
     return accuracy
 
-model = CNN()
-train(model, num_epochs=25)
+model = group_8()
+model.load_state_dict(torch.load(MODEL_PATH))
+
+train(model, num_epochs=1)
 val_accuracy = evaluate(model, val_loader)
 test_accuracy = evaluate(model, test_loader)
 print(f"Validation Accuracy: {val_accuracy:.2f}%")
 print(f"Test Accuracy: {test_accuracy:.2f}%")
 
 # Save the best model
-torch.save(model.state_dict(), 'best_cnn_model.pth')
+torch.save(model.state_dict(), MODEL_PATH)
