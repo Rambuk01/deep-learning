@@ -118,7 +118,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = group_8()
 model.to(device)
 
-# model.load_state_dict(torch.load(MODEL_PATH))
+#model.load_state_dict(torch.load(MODEL_PATH))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.005, momentum=0.9)
@@ -128,6 +128,9 @@ train_losses = []
 val_losses = []
 val_accuracies = []
 prior_val_accuracy = 0;
+
+
+### EPOCH TRAINING LOOP ###
 for epoch in range(EPOCHS):
     ## TRAIN MODEL
     avg_train_loss = train(model, train_loader, criterion, optimizer)
@@ -137,9 +140,9 @@ for epoch in range(EPOCHS):
 
     ######## SAVE MODEL IF IT IS BETTER ########
     if val_accuracy > prior_val_accuracy:
-        torch.save(model.state_dict(), f"{val_accuracy}_{MODEL_PATH}")
-        print("Model improved: New Accuracy: {val_accuracy}, Old Accuracy: {prior_val_accuracy}")
-        print("Saving new model improved: New Accuracy: {val_accuracy}")
+        torch.save(model.state_dict(), f"{val_accuracy:.1}_{MODEL_PATH}")
+        print(f"Model improved: New Accuracy: {val_accuracy}, Old Accuracy: {prior_val_accuracy}")
+        print(f"Saving new model improved: New Accuracy: {val_accuracy}")
         prior_val_accuracy = val_accuracy;
 
     ## SAVE ACCURACY AND LOSS DATA

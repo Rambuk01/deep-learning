@@ -152,7 +152,9 @@ for epoch in range(num_epochs):
             targets = targets.to(device)
 
             outputs = model(inputs)  # Forward pass: compute the model output
+            
             loss = criterion(outputs, targets)  # Compute validation loss
+            
             val_loss += loss.item()  # Accumulate validation loss
             
             # Calculate accuracy
