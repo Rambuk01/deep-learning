@@ -20,9 +20,9 @@ def move_files(image_list, destination, source):
         move(src, dst)
 
 # Define paths
-current_file_directory = os.path.dirname(os.path.abspath(__file__)) 
-source_dir = current_file_directory + "/data" # Directory containing all the images ( make sure, that the data folder, is in the same folder as this file )
-base_dir = current_file_directory + "/organized_data" # Base directory where organized images will be stored
+current_directory = os.path.dirname(os.path.abspath(__file__)) 
+source_dir = current_directory + "/data" # Directory containing all the images ( make sure, that the data folder, is in the same folder as this file )
+base_dir = current_directory + "/organized_data" # Base directory where organized images will be stored
 
 # Create subdirectories for train, val, and test splits
 for split in ['training', 'validation', 'testing']:
