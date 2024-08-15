@@ -13,7 +13,8 @@ import os
 INPUT_DIM = (256, 256)
 CHANNEL_DIM = 3
 CURRENT_FILE_DIRECTORY = os.path.dirname(os.path.abspath(__file__)) 
-MODEL_PATH = "best_cnn_model.pth"
+MODEL_PATH = "group_8.pth"
+EPOCHS = 2
 
 # Define model
 class group_8(nn.Module):
