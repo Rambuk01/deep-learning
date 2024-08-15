@@ -21,11 +21,17 @@ def train(model, loader, criterion, optimizer):
     running_loss = 0.0
 
     # Training loop
-    for images, labels in loader:
+    for batch, (images, labels) in enumerate(loader):
+        print(f"Batch: {batch}")
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad() # Clears any previous gradients.
         outputs = model(images)
         loss = criterion(outputs, labels)
+
+        ## L2 Regularization (Ridge regression)
+        l2_norm_fc2 = torch.norm(model.fc2.weight, p=2)  # Calculate L2 norm of the weights in the 2nd layer
+        loss += 0.001 * l2_norm_fc2  # Add L2 regularization to the loss
+
         loss.backward() # Performing backpropagation to compute gradients.
         optimizer.step()
         running_loss += loss.item()
@@ -97,14 +103,14 @@ class CustomDataset(Dataset):
 
 # Making individual transformations on train and test/validation data. 
 train_transform = transforms.Compose([
-    transforms.Resize(INPUT_DIM),  # Resize all images to 256x256 
+    transforms.Resize(input_dim),  # Resize all images to 256x256 
     transforms.RandomAffine(degrees=5, translate=(0.05, 0.05), scale=(0.95, 1.05)),  # For slightly altered medical images
     transforms.RandomHorizontalFlip(),  # Flip is useful since pneumonia might appear similary on either lung
     transforms.ColorJitter(brightness=0.1, contrast=0.1),  # Adjust brightness and contrast slightly, since medical images ofent have it standardized.
     transforms.ToTensor(),
 ])
 test_val_transform = transforms.Compose([
-    transforms.Resize(INPUT_DIM),  # Resize all images to 256x256
+    transforms.Resize(input_dim),  # Resize all images to 256x256
     transforms.ToTensor(),
 ])
 
@@ -144,6 +150,7 @@ collector = [];
 
 ### EPOCH TRAINING LOOP ###
 for epoch in range(EPOCHS):
+
     # Train model
     avg_train_loss = train(model, train_loader, criterion, optimizer)
 
@@ -188,5 +195,5 @@ lines = [train_loss_line, val_loss_line, accuracy_line]
 labels = [line.get_label() for line in lines]
 plt.title('Training Loss, Validation Loss, and Accuracy')
 plt.legend(lines, labels, loc='upper left')
-plt.savefig(f'{CURRENT_FILE_DIRECTORY}/group_8.png')
+plt.savefig(f'{CURRENT_FILE_DIRECTORY}/group_8v2.png')
 plt.show()
