@@ -46,3 +46,38 @@ move_files(images[training_split:validation_split], os.path.join(base_dir, 'vali
 move_files(images[validation_split:], os.path.join(base_dir, 'testing'), source=source_dir)
 
 print("Images have been organized into subfolders successfully!")
+#In order to see if the dataset is divided correctly we will visualize the distribution in a barchart.
+# counting the files
+def count_files(directory):
+    return len(os.listdir(os.path.join(directory, 'normal'))), len(os.listdir(os.path.join(directory, 'pneumonia')))
+
+train_counts = count_files(os.path.join(base_dir, 'training'))
+val_counts = count_files(os.path.join(base_dir, 'validation'))
+test_counts = count_files(os.path.join(base_dir, 'testing'))
+
+# data for plotting
+categories = ['Training', 'Validation', 'Testing']
+normal_counts = [train_counts[0], val_counts[0], test_counts[0]]
+pneumonia_counts = [train_counts[1], val_counts[1], test_counts[1]]
+
+plt.figure(figsize=(10, 6))
+y_pos = range(len(categories))
+
+# horizontal bars
+bars1 = plt.barh(y_pos, normal_counts, color='lightgreen', label='Normal')
+bars2 = plt.barh(y_pos, pneumonia_counts, left=normal_counts, color='salmon', label='Pneumonia')
+
+# annotations
+for bar in bars1:
+    plt.text(bar.get_width() / 2, bar.get_y() + bar.get_height() / 2, 
+             str(int(bar.get_width())), ha='center', va='center', color='black')
+
+for bar in bars2:
+    plt.text(bar.get_x() + bar.get_width() / 2, bar.get_y() + bar.get_height() / 2, 
+             str(int(bar.get_width())), ha='center', va='center', color='black')
+
+plt.xlabel('Number of Images')
+plt.title('Distribution of Images in Folders')
+plt.yticks(y_pos, categories)
+plt.legend()
+plt.show()
