@@ -23,6 +23,8 @@ EPOCHS = 2
 
 
 # Define model
+# A Convolutional Neural Network is chosen due to its strengths in image recognition and classification. 
+# As our purpose is to distinguish the images of the healthy patients from those with pneumonia, we find it to be the best option.
 class group_8(nn.Module):
     def __init__(self):
         super(group_8, self).__init__()
@@ -31,6 +33,7 @@ class group_8(nn.Module):
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, stride=1, padding=0) # torch.Size([64, 16, 254, 254])
         self.pool = nn.MaxPool2d(kernel_size=2) # torch.Size([64, 16, 127, 127])
 
+# We have chosen to make 3 fully connected layers in a funnel structure.
         self.fc1 = nn.Linear(in_features=16*127*127, out_features=128)
         self.fc2 = nn.Linear(in_features=128, out_features=64)
         self.fc3 = nn.Linear(in_features=64, out_features=2)
