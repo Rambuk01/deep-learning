@@ -12,6 +12,8 @@ import random
 import torch.nn.functional as F
 from group_8 import *
 
+
+# Functions thats trains the model using our dataloader. 
 def train(model, loader, criterion, optimizer):
 
     model.train()
