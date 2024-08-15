@@ -112,7 +112,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
 
 # Training settings
-num_epochs = 5
+num_epochs = 20
 
 train_losses = []
 val_losses = []
