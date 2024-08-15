@@ -40,7 +40,38 @@ class group_8(nn.Module):
         # print(f"After maxpool - x.shape : {x.shape}")
         x = torch.flatten(x, 1)
         x = self.relu(self.fc1(x))
+        ## DROPOUT HERE
+        ## RIDGE REGRESSION?
         x = self.relu(self.fc2(x))
+        ## DROPOUT HERE
+        ## RIDGEREGRESSION?
         x = self.sigmoid(self.fc3(x))
         return x
     
+# CNN Architecture
+class CNN(nn.Module):
+    def __init__(self):
+        super(CNN, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1)
+        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, padding=1)
+        self.maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.dropout = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(256 * 16 * 16, 512)
+        self.fc2 = nn.Linear(512, 2)  # Two classes: normal and pneumonia
+
+    def forward(self, x):
+        x = torch.relu(self.conv1(x))
+        x = self.maxpool(x)
+        x = torch.relu(self.conv2(x))
+        x = self.maxpool(x)
+        x = torch.relu(self.conv3(x))
+        x = self.maxpool(x)
+        x = torch.relu(self.conv4(x))
+        x = self.maxpool(x)
+        x = x.view(x.size(0), -1)  # Flatten the tensor
+        x = torch.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
