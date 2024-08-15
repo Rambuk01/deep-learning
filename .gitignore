@@ -6,3 +6,4 @@ venv/
 .DS_Store
 data.zip
 textvenv/
+best_cnn_model.pth
