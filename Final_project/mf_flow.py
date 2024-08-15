@@ -151,7 +151,7 @@ for epoch in range(num_epochs):
     total = 0
     
     with torch.no_grad():  # Disable gradient calculation for validation
-        for inputs, targets in test_loader:
+        for inputs, targets in val_loader:
             inputs = inputs.to(device)
             targets = targets.to(device)
 

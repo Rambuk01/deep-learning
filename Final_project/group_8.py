@@ -18,16 +18,28 @@ CURRENT_FILE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 class group_8(nn.Module):
     def __init__(self):
         super(group_8, self).__init__()
-        self.fc1 = nn.Linear(in_features=256*256*3, out_features=128)
+
+        ## CONV LAYER
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, stride=1, padding=0) # torch.Size([64, 16, 254, 254])
+        self.pool = nn.MaxPool2d(kernel_size=2) # torch.Size([64, 16, 127, 127])
+
+        self.fc1 = nn.Linear(in_features=16*127*127, out_features=128)
         self.fc2 = nn.Linear(in_features=128, out_features=64)
-        self.fc3 = nn.Linear(in_features=64, out_features=10)
+        self.fc3 = nn.Linear(in_features=64, out_features=2)
 
         self.relu = nn.ReLU()
+        self.softmax = nn.Softmax2d()
+        self.sigmoid = nn.Sigmoid()
         
     def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu(x) # After conv1 - x.shape : torch.Size([64, 16, 254, 254])
+        # print(f"After conv1 - x.shape : {x.shape}")
+        x = self.pool(x) # After maxpool - x.shape : torch.Size([64, 16, 127, 127])
+        # print(f"After maxpool - x.shape : {x.shape}")
         x = torch.flatten(x, 1)
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
-        x = self.relu(self.fc3(x))
+        x = self.sigmoid(self.fc3(x))
         return x
     
