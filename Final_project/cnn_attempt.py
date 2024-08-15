@@ -11,6 +11,7 @@ from shutil import move
 import random
 import torch.nn.functional as F
 from group_8 import *
+from pathlib import Path
 
 
 # Functions thats trains the model using our dataloader. 
@@ -124,7 +125,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = group_8()
 model.to(device)
 
-model.load_state_dict(torch.load(MODEL_PATH))
+## LOAD THE TRAINED MODEL STATE ##
+model_file = Path(MODEL_PATH)
+if model_file.is_file():
+    print("LOADING THE TRAINED MODEL STATE")
+    model.load_state_dict(torch.load(MODEL_PATH))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.005, momentum=0.9)
