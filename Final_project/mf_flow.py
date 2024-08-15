@@ -1,5 +1,5 @@
 from group_8 import *
-
+## MARIO ##
 class CustomDataset(Dataset):
     def __init__(self, root, transform=None):
         self.root = root
@@ -85,6 +85,7 @@ image_np = np.clip(image_np, 0, 1)  # Clip values to be between 0 and 1
 plt.imshow(image_np)
 plt.title(f"Label: {label}")
 plt.show()
+sys.exit()
 """
 ############ END INSPECT
 
