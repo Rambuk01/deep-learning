@@ -123,14 +123,10 @@ for epoch in range(num_epochs):
     model.train()  # Set the model to training mode
     running_loss = 0.0  # Initialize running loss for the epoch
     
-    unique_labels = set() # DEBUGGING!!
-
     ## TRAINING LOOP ##
     for inputs, targets in train_loader:
         inputs = inputs.to(device)
         targets = targets.to(device)
-
-        unique_labels.update(targets.numpy())
 
         optimizer.zero_grad()  # Zero the parameter gradients
         outputs = model(inputs)  # Forward pass: compute the model output

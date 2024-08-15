@@ -10,10 +10,17 @@ from PIL import Image
 import os
 
 # GLOBAL CONTANTS ( global constants should always be written with caps. )
-INPUT_DIM = (256, 256)
-CHANNEL_DIM = 3
+INPUT_DIM = (256, 256) 
+CHANNEL_DIM = 3 # RGB
 CURRENT_FILE_DIRECTORY = os.path.dirname(os.path.abspath(__file__)) 
-MODEL_PATH = "best_cnn_model.pth"
+MODEL_PATH = "group_8.pth"
+EPOCHS = 2
+
+# We chose to use 3 channels (RGB) to preserve potential information 
+# that might get lost with 1 channel (grayscale). Due to the dataset
+# not being to large, we did it to ensure that color-based distinctions and nuances, 
+# which might be relevant even in seemingly monochromatic datasets, are not overlooked. 
+
 
 # Define model
 class group_8(nn.Module):
