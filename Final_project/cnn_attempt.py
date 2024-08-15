@@ -79,7 +79,6 @@ class CustomDataset(Dataset):
 
         return image, label #, os.path.basename(img_path)
 
-INPUT_DIM = (256, 256)
 
 train_transform = transforms.Compose([
     transforms.Resize(INPUT_DIM),  # Resize all images to 256x256
@@ -102,7 +101,6 @@ test_dataset = CustomDataset(root=f"/{CURRENT_FILE_DIRECTORY}/organized_data/tes
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
-
 
 
 # Training and Evaluation
