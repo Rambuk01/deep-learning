@@ -10,7 +10,7 @@ import os
 from shutil import move
 import random
 import torch.nn.functional as F
-
+from group_8 import *
 
 class CustomDataset(Dataset):
     def __init__(self, root, transform=None):
@@ -47,32 +47,28 @@ class CustomDataset(Dataset):
 
 INPUT_DIM = (256, 256)
 
-
-transform = transforms.Compose([
+train_transform = transforms.Compose([
     transforms.Resize(INPUT_DIM),  # Resize all images to 256x256
     transforms.RandomAffine(degrees=5, translate=(0.05, 0.05), scale=(0.95, 1.05)),  # Reduced transformations suitable for medical images
     transforms.RandomHorizontalFlip(),  # Random horizontal flip
     transforms.ColorJitter(brightness=0.1, contrast=0.1),  # Adjust brightness and contrast slightly
     transforms.ToTensor(),
-    #transforms.Normalize((0.5,), (0.5,)), ## DONT INCLUDE THIS, UNLESS YOU KNOW EXACTLY WHAT IT DOES
+])
+test_val_transform = transforms.Compose([
+    transforms.Resize(INPUT_DIM),  # Resize all images to 256x256
+    transforms.ToTensor(),
 ])
 
 # LOAD THE DATASETS
-# Load the datasets
-train_dataset = CustomDataset(r'C:\Users\Aiga\Desktop\SDU\Final project\organized_data\training', transform=transform)
-val_dataset = CustomDataset(r'C:\Users\Aiga\Desktop\SDU\Final project\organized_data\validation', transform=transforms.Compose([
-    transforms.Resize(INPUT_DIM),  # Only resize for validation/testing
-    transforms.ToTensor(),
-]))
-test_dataset = CustomDataset(r'C:\Users\Aiga\Desktop\SDU\Final project\organized_data\testing', transform=transforms.Compose([
-    transforms.Resize(INPUT_DIM),
-    transforms.ToTensor(),
-]))
+train_dataset = CustomDataset(root=f"/{CURRENT_FILE_DIRECTORY}/organized_data/training", transform=train_transform)
+val_dataset = CustomDataset(root=f"/{CURRENT_FILE_DIRECTORY}/organized_data/validation", transform=test_val_transform)
+test_dataset = CustomDataset(root=f"/{CURRENT_FILE_DIRECTORY}/organized_data/testing", transform=test_val_transform)
 
 # DATA LOADERS
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+
 # CNN Architecture
 class CNN(nn.Module):
     def __init__(self):
