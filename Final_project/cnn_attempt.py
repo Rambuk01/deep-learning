@@ -138,7 +138,9 @@ for epoch in range(EPOCHS):
 
     ######## SAVE MODEL IF IT IS BETTER ########
     if val_accuracy > prior_val_accuracy:
-        torch.save(model.state_dict(), MODEL_PATH)
+        torch.save(model.state_dict(), f"{val_accuracy}_{MODEL_PATH}")
+        print("Model improved: New Accuracy: {val_accuracy}, Old Accuracy: {prior_val_accuracy}")
+        print("Saving new model improved: New Accuracy: {val_accuracy}")
         prior_val_accuracy = val_accuracy;
 
     ## SAVE ACCURACY AND LOSS DATA
