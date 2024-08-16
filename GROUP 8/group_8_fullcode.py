@@ -279,7 +279,6 @@ plt.yticks(y_pos, categories)
 plt.legend()
 plt.show()
 
-################################ TASK 2 END ################################
 
 # LOAD THE DATASETS
 train_dataset = CustomDataset(root=f"/{CURRENT_FILE_DIRECTORY}/organized_data/training", transform=train_transform)
@@ -327,9 +326,9 @@ for epoch in range(EPOCHS):
 
     ####### SAVE MODEL IF IT IS BETTER ########
     if val_accuracy > prior_val_accuracy:
-        torch.save(model.state_dict(), f"v2{MODEL_PATH}")
+        torch.save(model.state_dict(), f"{MODEL_PATH}")
         print(f"Model improved: New Accuracy: {val_accuracy}, Old Accuracy: {prior_val_accuracy}")
-        print(f"Saving new model improved: {val_accuracy}")
+        print(f"Saving new model improved: New Accuracy: {val_accuracy}")
         prior_val_accuracy = val_accuracy;
 
     # Save accuracy and loss data
